@@ -1,0 +1,29 @@
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+import connectDb from './config/db.js';
+import authRoutes from './routes/auth.routes.js';
+import { authRequired } from './middlewares/auth.js';
+
+
+dotenv.config();
+connectDb();
+
+const app = express();
+
+app.use(cors());
+app.use(helmet());
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
+app.use('/api/auth', authRoutes);
+
+app.get('/api/profile', authRequired, (req, res) => {
+  res.json({ message: `Hello user ${req.userId}` })
+});
+
+export default app;
