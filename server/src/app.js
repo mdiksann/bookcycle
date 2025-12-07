@@ -15,8 +15,15 @@ connectDb();
 const app = express();
 
 app.use(cors());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(express.json());
+
+// Serve static files untuk image uploads
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.send("API is running...");
